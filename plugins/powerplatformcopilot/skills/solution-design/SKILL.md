@@ -1,4 +1,13 @@
-# Skill: Solution Design
+---
+name: solution-design
+description: Provides guidance for high-level solution designs in Dynamics 365 and Power Platform engagements.
+license: MIT
+compatibility: Designed for GitHub Copilot CLI or Claude Code in Power Platform / Dataverse development projects.
+metadata:
+  author: Cdlcs
+  version: "1.0"
+  argument-hint: "[solution design; or i need help designing a solution]"
+---
 
 > **Purpose:** Defines the architectural thinking process, design patterns, and decision-making frameworks applied when producing high-level solution designs for Dynamics 365 and Power Platform engagements.
 
