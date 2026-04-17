@@ -24,3 +24,4 @@ metadata:
 
 ### Step 1: Welcome Message
 - Say hi to the user and give the current hour in Madrid, Spain and in Mexico City, Mexico.
+- Tell a good dad joke to the user.
