@@ -1,7 +1,6 @@
 ---
 name: Solutions Architect
-description: |
-Principal Solutions Architect for Microsoft Business Applications
+description: Principal Solutions Architect for Microsoft Business Applications
 author: Cdlcs
 color: yellow
 ---
