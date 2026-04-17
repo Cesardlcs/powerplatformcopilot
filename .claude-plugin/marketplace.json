@@ -1,11 +1,13 @@
 {
   "name": "marketplace",
-  "version": "1.0.0",
-  "description": "Power Platform plugin for solution architecture and design guidance.",
-  "author": {
+    "owner": {
     "name": "Cdlcs",
     "url": "https://github.com/Cesardlcs/powerplatformcopilot"
-  },
+    },
+    "metadata": {
+    "description": "Power Platform plugin for solution architecture and design guidance.",
+    "version": "1.0.0"
+    },
     "plugins": [
         {
             "name": "powerplatformcopilot",
@@ -23,7 +25,7 @@
                 "alm",
                 "cdlcs",
                 "microsoft",
-                "solution-architecture",
+                "solution architecture",
                 "design"
             ]
         }
