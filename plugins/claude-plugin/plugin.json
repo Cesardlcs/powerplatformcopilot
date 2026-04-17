@@ -1,0 +1,31 @@
+{
+  "name": "powerplatformcopilot",
+  "version": "1.0.0",
+  "description": "Power Platform plugin for solution architecture and design guidance.",
+  "author": {
+    "name": "Cdlcs",
+    "url": "https://github.com/Cesardlcs/powerplatformcopilot"
+  },
+    "plugins": [
+        {
+            "name": "powerplatformcopilot",
+            "source": "./plugins/powerplatformcopilot",
+            "description": "Power Platform plugin for solution architecture and design guidance.",
+            "category": "development",
+            "tags": [
+                "power platform",
+                "dataverse",
+                "dynamics 365",
+                "pcf",
+                "power automate",
+                "power pages",
+                "model-driven apps",
+                "alm",
+                "cdlcs",
+                "microsoft",
+                "solution-architecture",
+                "design"
+            ]
+        }
+    ]
+}
