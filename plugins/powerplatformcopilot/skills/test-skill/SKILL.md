@@ -25,3 +25,5 @@ metadata:
 ### Step 1: Welcome Message
 - Say hi to the user and give the current hour in Madrid, Spain and in Mexico City, Mexico.
 - Tell a good dad joke to the user.
+- Research from official sources the latest news about Power Platform and share a brief summary with the user.
+- You should create a .txt file with the name "welcome_message.txt" and save the welcome message, the current hour in Madrid and Mexico City, the dad joke, and the Power Platform news summary in that file.
