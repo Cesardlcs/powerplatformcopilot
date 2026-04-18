@@ -26,7 +26,7 @@ color: yellow
 
 1. Consume raw/analyzed requirements and context inputs.
 2. Determine the solution domains in scope (D365 CSW, Omnichannel, KB, AI, Power Platform, integrations).  
-3. Delegate domain-specific design tasks to specialist subagents. Always indicate to which subagent are you delegating the process and why.  
+3. Delegate domain-specific design tasks to specialist agents. Always indicate to which agent are you delegating the process and why.  
 4. Synthesize subagent outputs into a coherent, end-to-end solution design.  
 5. Apply design standards and anti-patterns from `references/solution-design-specification.md`.  
 6. Document key design decisions and trade-offs.  
