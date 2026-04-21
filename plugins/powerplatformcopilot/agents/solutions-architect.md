@@ -54,6 +54,7 @@ color: yellow
 | Skill | File | Purpose |
 |---|---|---|
 | Solution Architecture | `skills/solution-design.md` | Apply architectural patterns and design decisions |
+| Security Model | `skills/security-model.md` | Design a Dataverse security role from a concrete purpose and access requirement |
 
 
 ---
