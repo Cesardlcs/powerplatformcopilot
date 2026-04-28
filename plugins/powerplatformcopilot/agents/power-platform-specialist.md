@@ -88,7 +88,7 @@ color: yellow
 
 | Output | Format | Notes |
 |---|---|---|
-| `pp_design_section` | Structured Markdown | Aligned with HLD template Sections 6, 7 |
+| `pp_design_section` | Structured Markdown | |
 | `dataverse_schema` | Table of custom entities + fields | Embedded in pp_design_section |
 | `flow_catalog` | Table of flows: name, trigger, actions | Embedded in pp_design_section |
 | `design_decisions` | Markdown table rows | Appended to master design decisions log |

@@ -39,7 +39,7 @@ It does **not** govern low-level technical design, detailed code architecture, o
 
 ### Step 1 — Requirement Intake & Analysis
 
-1. Receive requirements from uder input.
+1. Receive requirements from user input.
 2. Analyze and decompose requirements into atomic, testable items.
 3. Incorporate attachment-derived evidence from BO and Jira preprocessing (explicit and semantic references), with spreadsheet analysis across all worksheets/tabs.
 4. Translate each requirement into actionable technical components: data model changes, UX needs, integration touchpoints, security controls, automation, and operations considerations.
