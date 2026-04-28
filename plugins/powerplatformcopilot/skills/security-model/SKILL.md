@@ -24,7 +24,7 @@ Follow these steps in order for every `/security-model` invocation.
 
 - **Mínimo privilegio**: Cada rol solo tiene los permisos necesarios para su función.
 - **Zero Trust**: No se asume confianza implícita; todo acceso es verificado.
-- **Baseline obligatorio**: Todo nuevo rol debe partir del rol `Basic User`; no se diseña desde cero ignorando ese baseline.
+- **Baseline obligatorio**: Todo nuevo rol debe partir del rol `Basic User` o el que el usuario indique; no se diseña desde cero ignorando ese baseline.
 - **Objetivo exacto**: El rol debe permitir exactamente el resultado requerido y excluir privilegios no justificados.
 - **Dependencias funcionales completas**: Siempre hay que identificar privilegios subyacentes necesarios para completar la acción principal, incluyendo tablas relacionadas, procesos, asignaciones, lookups, calendario, recursos, ownership, y acciones auxiliares.
 
@@ -54,7 +54,7 @@ Ask these questions. The purpose and requirement questions are mandatory on ever
 
 1. **Purpose (always ask)**: "What is the exact purpose of the security role you need to create?"
 2. **Requirement (always ask)**: "What actions must the user be able to complete end to end? Please describe the business flow, not only the obvious main table."
-3. **Reference roles**: "Which existing security roles should be inspected as references? Provide the role names exactly as they exist in the environment."
+3. **Reference roles (always ask)**: "Which existing security roles should be inspected as references? Provide the role names exactly as they exist in the environment."
 4. **Scope constraints**: "Is this for end users, agents, integrations, or admins? Any boundaries for business unit, team, organization, ownership, or specific apps?"
 
 Do not proceed to design until purpose, requirement, business case, reference-role, and scope constraint input state are explicit.
@@ -72,9 +72,9 @@ If the user does not name any reference roles, explicitly record that no referen
 - Use `mcp_microsoftdocs_microsoft_docs_fetch` on high-value result pages before finalizing the proposal.
 
 #### 3.2 Environment role inventory and baseline discovery (required)
-- Confirm that `Basic User` exists in the connected environment and treat it as the mandatory baseline role for every new proposal, unless the user explicitly states otherwise.
+- Confirm that `Basic User` or the one indicated by the user exists in the connected environment and treat it as the mandatory baseline role for every new proposal, unless the user explicitly states otherwise.
 - Inspect existing roles in the connected environment and identify:
-  - The effective baseline privileges inherited from `Basic User`
+  - The effective baseline privileges inherited from `Basic User` or the user-specified baseline role
   - Candidate roles that already align with the requested purpose
   - The user-supplied reference roles that must be compared in detail
 - Use Dataverse MCP and/or PAC CLI as needed to gather:
@@ -131,7 +131,7 @@ Present a structured proposal in plan mode including:
 
 Before creating anything, provide a compliance check:
 
-- Compare against `Basic User` plus the requested deltas, not only against standalone custom roles.
+- Compare against `Basic User` or the user-specified baseline role plus the requested deltas, not only against standalone custom roles.
 - List candidate existing roles that partially or fully match.
 - State clearly one of:
   - **Compliant role exists** (no new role required), or
@@ -158,9 +158,10 @@ Ask for user approval after presenting:
 - Requirement understanding
 - Baseline role statement (`Basic User` or user-specified baseline role)
 - Reference-role comparison
-- Proposed privilege matrix
+- Proposed detailed privilege matrix
 - Existing-role compliance result
 - Planned role name including `validating`
+- Use the Output Template (Use In Plan Mode Before Approval) in `/references/   security-role-proposal` to structure the proposal and ensure all points are covered
 
 Do not create or modify roles before explicit approval.
 
@@ -176,7 +177,65 @@ Create the role in the connected environment using available MCP/PAC capabilitie
 6. Add/create the role inside the user-selected solution when the user asked for creation.
 7. Confirm the created role and summarize applied privileges/depth.
 
-If technical limitations block direct creation, provide the exact limitatios and try to go beyond them. If creation is blocked, still write the final output file and include blockers and exact next actions.
+#### 8.1 Authentication for Role Creation (Mandatory)
+
+Use **MSAL interactive popup authentication** to obtain a bearer token before calling the Dataverse Web API. Do not attempt device code flow, Azure CLI, or any other method first.
+
+Steps:
+
+```powershell
+# 1. Locate the MSAL DLL bundled with the PAC CLI VS Code extension
+$pacFolder = (Get-Command pac).Source | Split-Path
+$msalDll = Get-ChildItem $pacFolder -Filter "Microsoft.Identity.Client.dll" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+if (-not $msalDll) {
+    # Fallback: search VS Code global storage
+    $msalDll = Get-ChildItem "$env:APPDATA\Code\User\globalStorage" -Filter "Microsoft.Identity.Client.dll" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+}
+Add-Type -Path $msalDll.FullName
+
+# 2. Build the public client and acquire token interactively (browser popup)
+$tenantId  = "<tenant-id-from-pac-auth-who>"
+$clientId  = "1950a258-227b-4e31-a9cf-717495945fc2"   # Azure PowerShell public client
+$orgUrl    = "<environment-url-from-pac-env-who>"      # e.g. https://org.crm4.dynamics.com/
+$scope     = "$orgUrl.default"
+
+$builder = [Microsoft.Identity.Client.PublicClientApplicationBuilder]::Create($clientId)
+$builder = $builder.WithAuthority("https://login.microsoftonline.com/$tenantId")
+$builder = $builder.WithDefaultRedirectUri()
+$app     = $builder.Build()
+
+Write-Host "A browser window will open. Please sign in to authorize Dataverse access." -ForegroundColor Cyan
+$result = $app.AcquireTokenInteractive([string[]]@($scope)).ExecuteAsync().GetAwaiter().GetResult()
+$token  = $result.AccessToken
+Write-Host "Authenticated as $($result.Account.Username)" -ForegroundColor Green
+```
+
+```powershell
+# 3. Apply privileges using AddPrivilegesRole Web API action
+$roleId  = "<role-guid>"
+$headers = @{
+    "Authorization"    = "Bearer $token"
+    "Content-Type"     = "application/json"
+    "OData-MaxVersion" = "4.0"
+    "OData-Version"    = "4.0"
+}
+
+# Depth values: "Basic" = User, "Local" = BU, "Deep" = Parent:Child BU, "Global" = Org
+$privileges = @(
+    @{ PrivilegeId = "<guid>"; Depth = "Local" },
+    @{ PrivilegeId = "<guid>"; Depth = "Global" }
+    # ... one entry per approved privilege
+)
+
+$body = @{ Privileges = $privileges } | ConvertTo-Json -Depth 5
+$url  = "$orgUrl`api/data/v9.2/roles($roleId)/Microsoft.Dynamics.CRM.AddPrivilegesRole"
+Invoke-RestMethod -Method Post -Uri $url -Headers $headers -Body $body | Out-Null
+Write-Host "Privileges applied successfully." -ForegroundColor Green
+```
+
+If technical limitations block creation, still write the final output file and document blockers with exact next actions.
+
+DO NOT MOVE TO STEP 9 UNTIL CREATION IS CONFIRMED OR EXPLICITLY SKIPPED.
 
 ### Step 9: Final Output
 
@@ -204,54 +263,3 @@ Rules:
 2. Write one markdown file per execution.
 3. Recommended filename format: `security-model/output/[role-name].md`.
 4. The file content must be the same final output delivered to the user in Step 9.
-5. If role creation is blocked, still write the final output file and include blockers and exact next actions.
-
-## Output Template (Use In Plan Mode Before Approval)
-
-```markdown
-## Security Role Proposal: [RolePurpose]-validating
-
-**Environment**: [Friendly Name] ([Organization ID])
-**Purpose**: [role purpose]
-**Requirement**: [user requirement]
-**Business Case**: [user business case]
-**Baseline Role**: `Basic User` or user-specified baseline role
-**Reference Roles Provided**: [role names or "None provided"]
-
-### Existing Role Compliance Check
-- [Role A]: [Compliant / Partial / Not compliant] - [why]
-- [Role B]: [Compliant / Partial / Not compliant] - [why]
-
-**Conclusion**: [Compliant role exists / No compliant role exists]
-
-### Proposed Role
-- **Role Name**: `[name-with-validating]`
-- **Scope**: [User / BU / Parent:Child BU / Organization]
-- **Starting Point**: Clone or extend `Basic User` or user-specified baseline role
-- **Temporary Intent**: Validation only until tests and business sign-off are complete.
-
-### Reference Role Analysis
-| Reference Role | Relevant Privileges Reused | Privileges Intentionally Excluded | Notes |
-|---|---|---|---|
-| [Role A] | [list] | [list] | [why] |
-
-### Privilege Matrix
-| Table/Process | Privilege | Access Level | Include? | Source | Dependency Type | Rationale |
-|---|---|---|---|---|---|---|
-| bookableresourcebooking | Create | BU | Yes | Newly required | Primary requirement | [reason] |
-| bookableresource | Read | BU | Yes | Underlying dependency | Underlying dependency | [reason] |
-| msdyn_workorder | AppendTo | BU | Yes | Underlying dependency | Underlying dependency | [reason] |
-| incident | Delete | User | No | Explicitly excluded | Risk control | [risk control reason] |
-
-### Underlying Dependencies Considered
-- [Dependency 1] - [Included/Excluded and why]
-- [Dependency 2] - [Included/Excluded and why]
-
-### Risk Controls
-- [control 1]
-- [control 2]
-
-### Microsoft Guidance Referenced
-- [doc title](url)
-- [doc title](url)
-```
