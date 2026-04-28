@@ -103,6 +103,15 @@ For each requirement, produce:
 
 ---
 
+## Skills Used
+
+| Skill | File | Purpose |
+|---|---|---|
+| Security Model | `skills/security-model/SKILL.md` | Design a Dataverse security role from a concrete purpose and access requirement |
+| Data Model | `skills/data-model/SKILL.md` | Design a Dataverse security role from a concrete purpose and access requirement |
+
+---
+
 ## Design Principles Applied
 
 - Prefer **unified routing** over legacy basic routing for all new configurations.  

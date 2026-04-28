@@ -125,6 +125,16 @@ For each requirement, produce:
 
 ---
 
+## Skills Used
+
+| Skill | File | Purpose |
+|---|---|---|
+| Security Model | `skills/security-model/SKILL.md` | Design a Dataverse security role from a concrete purpose and access requirement |
+| Data Model | `skills/data-model/SKILL.md` | Design a Dataverse security role from a concrete purpose and access requirement |
+
+---
+
+
 ## Design Principles Applied
 
 - **Solution-first**: Every component must be in a named solution with correct publisher.  

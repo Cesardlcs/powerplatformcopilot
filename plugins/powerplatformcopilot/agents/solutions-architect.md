@@ -54,9 +54,10 @@ color: yellow
 
 | Skill | File | Purpose |
 |---|---|---|
-| Interviewer | `skills/interviewer.md` | Interviews the user one question at a time before any project work begins|
-| Solution Design | `skills/solution-design.md` | Apply architectural patterns and design decisions |
-| Security Model | `skills/security-model.md` | Design a Dataverse security role from a concrete purpose and access requirement |
+| Interviewer | `skills/interviewer/SKILL.md` | Interviews the user one question at a time before any project work begins|
+| Solution Design | `skills/solution-design/SKILL.md` | Apply architectural patterns and design decisions |
+| Security Model | `skills/security-model/SKILL.md` | Design a Dataverse security role from a concrete purpose and access requirement |
+| Data Model | `skills/data-model/SKILL.md` | Design a Dataverse security role from a concrete purpose and access requirement |
 
 
 ---
