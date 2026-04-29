@@ -1,0 +1,12 @@
+# Playwright auth state (contains session tokens – never commit)
+tests/.auth/
+
+# Playwright results
+playwright-report/
+test-results/
+
+# Environment variables
+.env
+
+# Node
+node_modules/

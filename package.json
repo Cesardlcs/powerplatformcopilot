@@ -1,0 +1,22 @@
+{
+  "name": "powerplatformcopilot-tests",
+  "version": "1.0.0",
+  "description": "Playwright tests for Power Platform security roles",
+  "scripts": {
+    "test": "playwright test",
+    "test:security": "playwright test tests/security-role",
+    "test:scenario": "playwright test tests/security-role/cc-agent-scenario.spec.ts",
+    "test:record": "playwright test tests/security-role/admin-recording.spec.ts",
+    "test:record-manual": "playwright test --project=manual-recording",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.44.0",
+    "@types/node": "^25.6.0",
+    "cross-env": "^10.1.0",
+    "dotenv": "^16.4.5",
+    "typescript": "^5.4.5"
+  }
+}
