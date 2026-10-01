@@ -77,7 +77,7 @@ color: yellow
 | Input | Format | Required |
 |---|---|---|
 | `requirements` | Filtered list from analyzed requirements set (D-PA / D-APP / D-PVA / D-DV / D-PP / D-AI) | Yes |
-| `design_spec` | Reference to `references/solution-design-specification.md` | Yes |
+| `design_spec` | Reference to `references/solution-design-specifications.md` | Yes |
 | `dataverse_context` | Existing entity metadata, solutions, security roles (from Dataverse MCP) | Yes |
 | `microsoft_reference_context` | Markdown / URLs / notes from Microsoft Docs MCP | Yes |
 | `constraints` | Tech, budget, licensing constraints | Yes |

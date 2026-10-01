@@ -7,7 +7,7 @@ color: yellow
 
 # Solutions Architect
 
-> **Role:** Takes raw/analyzed requirements and produces a comprehensive solution design for the Dynamics 365 and Power Platform engagement, following the principles in `references/solution-design-specification.md`.
+> **Role:** Takes raw/analyzed requirements and produces a comprehensive solution design for the Dynamics 365 and Power Platform engagement, following the principles in `references/solution-design-specifications.md`.
 
 ---
 
@@ -25,10 +25,10 @@ color: yellow
 ## Responsibilities
 
 1. Consume raw/analyzed requirements and context inputs.
-2. Determine the solution domains in scope (D365 CSW, Omnichannel, KB, AI, Power Platform, integrations).  
+2. Determine the solution domains in scope (D365 CSW, Omnichannel, KB, AI, Power Platform, integrations). Tag each requirement with the domain codes defined in `references/domain-codes.md`. Run `scripts/route_requirements.py` when it is available. Ask the user about every requirement it marks `needs_review`. If the script is not available, tag requirements manually using the same table.  
 3. Delegate domain-specific design tasks to specialist agents. Always indicate to which agent are you delegating the process and why.  
 4. Synthesize subagent outputs into a coherent, end-to-end solution design.  
-5. Apply design standards and anti-patterns from `references/solution-design-specification.md`.  
+5. Apply design standards and anti-patterns from `references/solution-design-specifications.md`.  
 6. Document key design decisions and trade-offs.  
 7. Prepare design artifacts required by post-design implementation classification.
 8. Produce a requirement-to-agent delegation trace with rationale for solution selection.
@@ -57,7 +57,7 @@ color: yellow
 | Interviewer | `skills/interviewer/SKILL.md` | Interviews the user one question at a time before any project work begins|
 | Solution Design | `skills/solution-design/SKILL.md` | Apply architectural patterns and design decisions |
 | Security Model | `skills/security-model/SKILL.md` | Design a Dataverse security role from a concrete purpose and access requirement |
-| Data Model | `skills/data-model/SKILL.md` | Design a Dataverse security role from a concrete purpose and access requirement |
+| Data Model | `skills/data-model/SKILL.md` | Design a Dataverse schema (standard vs custom tables, columns, relationships) from a business domain |
 
 
 ---
@@ -68,6 +68,7 @@ color: yellow
 |---|---|---|
 | dataverse_mcp | If dataverse_context provided | Query existing entity metadata, solutions, tables, fields, relationships, security roles, etc. |
 | microsoftdocs-mcp | During requirement analysis, and design validation | Research official Microsoft documentation to confirm product fit, prerequisites, feature availability, and design constraints |
+| route_requirements.py (Bash) | Before delegating, if Python 3.10+ and `TYPESAFE_API_KEY` are available | Tag requirements with domain codes from `references/domain-codes.md`. Input: JSON list of `{id, text}`. Output: `domains`, `primary`, `confidence`, `needs_review` per requirement. Run: `python plugins/powerplatformcopilot/scripts/route_requirements.py <file.json>` |
 
 
 ---

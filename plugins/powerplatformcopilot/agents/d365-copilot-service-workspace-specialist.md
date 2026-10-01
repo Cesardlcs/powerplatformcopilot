@@ -59,7 +59,7 @@ color: yellow
 | Input | Format | Required |
 |---|---|---|
 | `requirements` | Filtered list from analyzed requirements set (D-CSW / D-OCH / D-KB) | Yes |
-| `design_spec` | Reference to `references/solution-design-specification.md` | Yes |
+| `design_spec` | Reference to `references/solution-design-specifications.md` | Yes |
 | `dataverse_context` | Existing entity metadata, routing config (from Dataverse MCP) | Optional |
 | `microsoft_reference_context` | Markdown / URLs / notes from Microsoft Docs MCP | Optional |
 | `constraints` | Tech, budget, or org constraints from requirement analysis | Optional |

@@ -1,6 +1,6 @@
 # powerplatformcopilot
 
-A Claude Code plugin that turns Claude Code into a Power Platform / Dynamics 365 solution-architecture assistant. It packages agents, skills, and reference docs — no application code, no build step — to help design Dataverse schemas, security roles, and high-level solution designs following out-of-the-box-first, least-privilege principles.
+A Claude Code plugin that turns Claude Code into a Power Platform / Dynamics 365 solution-architecture assistant. It packages agents, skills, and reference docs (plus one optional Python helper script) to help design Dataverse schemas, security roles, and high-level solution designs following out-of-the-box-first, least-privilege principles.
 
 ## What it does
 
@@ -30,6 +30,18 @@ This repo is a Claude Code plugin marketplace. Add it as a marketplace source po
 **References** (`plugins/powerplatformcopilot/references/`)
 - `solution-design-specifications.md` — governing HLD methodology.
 - `security-role-proposal.md` — output template for security role proposals.
+- `domain-codes.md` — the `D-xx` domain codes, their owner agents, and the routing question for each.
+
+**Scripts** (`plugins/powerplatformcopilot/scripts/`)
+- `route_requirements.py` — optional. Tags requirements with domain codes using [TypeSafe](https://docs.typesafe.ai) System One. Needs Python 3.10+ and a `TYPESAFE_API_KEY` from https://console.typesafe.ai/.
+
+```sh
+pip install -r plugins/powerplatformcopilot/scripts/requirements.txt
+export TYPESAFE_API_KEY=...
+python plugins/powerplatformcopilot/scripts/route_requirements.py requirements.json
+```
+
+Input is a JSON list of `{"id": "R1", "text": "..."}`. Output adds `domains`, `primary`, `confidence`, and `needs_review`. Without the script, `solutions-architect` tags requirements by hand using `domain-codes.md`.
 
 ## Design principles
 
@@ -45,7 +57,9 @@ This repo is a Claude Code plugin marketplace. Add it as a marketplace source po
 .claude-plugin/marketplace.json                 # marketplace manifest — registers the plugin
 plugins/powerplatformcopilot/
   agents/            solutions-architect.md, power-platform-specialist.md,
-                      d365-copilot-service-workspace-specialist.md, basic.md
+                      d365-copilot-service-workspace-specialist.md
   skills/            interviewer/, solution-design/, data-model/, security-model/
-  references/        solution-design-specifications.md, security-role-proposal.md
+  references/        solution-design-specifications.md, security-role-proposal.md,
+                      domain-codes.md
+  scripts/           route_requirements.py, requirements.txt
 ```

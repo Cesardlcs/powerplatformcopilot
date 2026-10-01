@@ -4,11 +4,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository purpose
 
-This repo is the source for a **Claude Code plugin** (`powerplatformcopilot`) distributed via a marketplace manifest. It packages agents, skills, and reference docs that turn Claude Code into a Power Platform / Dynamics 365 solution-architecture assistant. There is no application code, no package.json, no build step, and no test suite — every "component" is a Markdown file with YAML frontmatter that Claude Code loads as an agent or skill definition. Changes here are almost always edits to those Markdown definitions.
+This repo is the source for a **Claude Code plugin** (`powerplatformcopilot`) distributed via a marketplace manifest. It packages agents, skills, and reference docs that turn Claude Code into a Power Platform / Dynamics 365 solution-architecture assistant. There is no application code, no package.json, no build step, and no test suite — every "component" is a Markdown file with YAML frontmatter that Claude Code loads as an agent or skill definition. The one exception is the optional helper script `plugins/powerplatformcopilot/scripts/route_requirements.py`. Changes here are almost always edits to the Markdown definitions.
 
 ## Commands
 
-None. There is nothing to build, lint, or test in this repository.
+Nothing to build, lint, or test. The optional routing script (Python 3.10+, needs `TYPESAFE_API_KEY`):
+
+```sh
+pip install -r plugins/powerplatformcopilot/scripts/requirements.txt
+python plugins/powerplatformcopilot/scripts/route_requirements.py requirements.json
+```
+
+It reads the domain table in `references/domain-codes.md`. To add or change a domain code, edit that table. Do not hard-code codes in the script.
 
 ## Architecture
 
@@ -16,9 +23,11 @@ None. There is nothing to build, lint, or test in this repository.
 .claude-plugin/marketplace.json                 # marketplace manifest — registers the plugin
 plugins/powerplatformcopilot/
   agents/            solutions-architect.md, power-platform-specialist.md,
-                      d365-copilot-service-workspace-specialist.md, basic.md
+                      d365-copilot-service-workspace-specialist.md
   skills/            interviewer/, solution-design/, data-model/, security-model/
-  references/        solution-design-specifications.md, security-role-proposal.md
+  references/        solution-design-specifications.md, security-role-proposal.md,
+                      domain-codes.md
+  scripts/           route_requirements.py, requirements.txt
 ```
 
 **Agent hierarchy.** `solutions-architect` is the orchestrator: it takes raw/analyzed requirements and delegates domain-specific design work to two specialist subagents based on requirement-domain codes:
